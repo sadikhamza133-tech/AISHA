@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Happy Birthday — Aisha Jouadri</title>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<style>
+  :root{
+    --bg1:#ff9a9e;
+    --bg2:#fecf89;
+    --accent:#ffd1dc;
+    --text: #fff;
+    --glass: rgba(255,255,255,0.08);
+    --glass-2: rgba(255,255,255,0.12);
+    --shadow: 0 10px 30px rgba(0,0,0,0.25);
+  }
+  /* Reset */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body,#app{height:100%}
+  body{
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+    background: linear-gradient(180deg,var(--bg1),var(--bg2));
+  }
+
+  /* Intro / preloader */
+  #intro {
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.35));
+    z-index:2000; backdrop-filter: blur(4px); transition: opacity .6s ease, transform .6s ease;
+    flex-direction:column; gap:16px;
+  }
+  #intro.hidden{ opacity:0; pointer-events:none; transform:scale(.98) }
+  #intro h2{ font-size:1.6rem; letter-spacing:0.6px }
+  #intro p{ font-size:.95rem; opacity:.9 }
+
+  /* App layout */
+  header{
+    position:relative; padding:28px 20px; text-align:center;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    box-shadow: var(--shadow);
+    z-index:5;
+  }
+  .title {
+    font-size:clamp(1.4rem, 4vw, 2rem);
+    font-weight:700;
+    text-transform:none;
+    letter-spacing:.6px;
+    display:inline-block;
+    padding:10px 18px;
+    border-radius:14px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    backdrop-filter: blur(4px);
+  }
+  .subtitle {
+    display:block; margin-top:8px; font-size:.95rem; opacity:.95;
+  }
+
+  main{
+    padding:32px 18px 120px;
+    max-width:1100px; margin:0 auto;
+    position:relative; z-index:2;
+  }
+
+  /* Sun halo behind heading */
+  .hero {
+    margin-top:26px; margin-bottom:18px;
+    text-align:center; position:relative; padding:22px;
+  }
+  .sun {
+    position:absolute; left:50%; top:8px; transform:translateX(-50%);
+    width:420px; height:420px; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,240,200,0.9) 0%, rgba(255,200,120,0.24) 25%, rgba(255,150,80,0.08) 55%, transparent 65%);
+    filter: blur(28px); z-index:-1; pointer-events:none; opacity:.95;
+    animation: slowPulse 6s ease-in-out infinite;
+  }
+  @keyframes slowPulse {0%{transform:translateX(-50%) scale(.98)}50%{transform:translateX(-50%) scale(1.03)}100%{transform:translateX(-50%) scale(.98)}}
+
+  h1.hero-title{
+    font-size:clamp(2rem, 6vw, 3.2rem); margin-bottom:8px;
+    text-shadow: 0 6px 30px rgba(0,0,0,0.35);
+  }
+  p.hero-sub{
+    font-size:1.05rem; opacity:.95;
+  }
+
+  /* Petals container (absolute) */
+  #petals { position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden }
+
+  /* Message scrolling area */
+  .message{
+    margin:20px auto; max-width:880px; padding:18px; border-radius:12px;
+    background: linear-gradient(180deg, var(--glass), var(--glass-2)); box-shadow:var(--shadow);
+    backdrop-filter: blur(6px);
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center;
+  }
+  .marquee{
+    width:100%; overflow:hidden;
+  }
+  .marquee p{
+    display:inline-block; padding-left:100%;
+    animation: marquee 16s linear infinite;
+    font-size:1.06rem;
+  }
+  @keyframes marquee{ 0%{transform:translateX(0)} 100%{transform:translateX(-100%)} }
+
+  /* Gallery */
+  .gallery {
+    margin-top:20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+    gap:14px;
+  }
+  .card {
+    border-radius:12px; overflow:hidden; position:relative; cursor:pointer;
+    background:rgba(255,255,255,0.02); transition: transform .25s ease, box-shadow .25s ease;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+  }
+  .card img{
+    width:100%; height:200px; object-fit:cover; display:block; transform-origin:center;
+    transition: transform .35s ease;
+  }
+  .card:hover{ transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,0.32) }
+  .card:hover img{ transform:scale(1.06) }
+
+  /* Lightbox */
+  #lightbox {
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background: rgba(0,0,0,0.84); z-index:3000; padding:20px; visibility:hidden; opacity:0;
+    transition: opacity .25s ease, visibility .25s ease;
+  }
+  #lightbox.show{ visibility:visible; opacity:1 }
+  #lightbox img{ max-width:95%; max-height:85vh; border-radius:10px; box-shadow: 0 20px 60px rgba(0,0,0,0.6) }
+  .lb-controls { position:absolute; top:50%; transform:translateY(-50%); width:100%; display:flex; justify-content:space-between; pointer-events:none }
+  .lb-btn{ pointer-events:auto; background:none; border:none; font-size:2.2rem; color:white; padding:12px; cursor:pointer; opacity:.9 }
+  .lb-bottom { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); color:#fff; opacity:.95; font-size:.95rem }
+
+  /* Controls area */
+  .controls { margin-top:20px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap }
+  .btn {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,0.9); color:#222; border-radius:999px; padding:10px 16px; border:none; cursor:pointer; font-weight:600;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.18); transition: transform .18s ease;
+  }
+  .btn:active{ transform:scale(.98) }
+  .btn.secondary{ background:transparent; color:var(--text); border:1px solid rgba(255,255,255,0.12) }
+
+  /* Surprise overlay (fancier) */
+  #surprise {
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.8) 60%);
+    z-index:4000; padding:20px; visibility:hidden; opacity:0; transition:opacity .25s ease, visibility .25s ease;
+  }
+  #surprise.show{ visibility:visible; opacity:1 }
+  .surprise-card {
+    width:min(780px,96%); background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    border-radius:16px; padding:28px; text-align:center; box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+    position:relative;
+  }
+  .surprise-heart {
+    font-size:4.4rem; display:inline-block; animation: beat 1s infinite; filter: drop-shadow(0 6px 18px rgba(255,0,100,0.18));
+  }
+  @keyframes beat{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+  .typewriter { margin-top:14px; font-size:1.05rem; line-height:1.5; min-height:3.2rem }
+
+  .close-small { position:absolute; right:12px; top:12px; border:none; background:transparent; color:#fff; font-size:1.05rem; cursor:pointer }
+
+  /* Music floating control */
+  #musicToggle {
+    position:fixed; right:18px; bottom:18px; z-index:5000; width:56px; height:56px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; box-shadow: 0 12px 36px rgba(0,0,0,0.35); background:linear-gradient(180deg,#fff,#eee);
+    cursor:pointer; transition: transform .18s;
+  }
+  #musicToggle.playing { transform: rotate(10deg) scale(1.02) }
+  #musicToggle svg { width:26px; height:26px }
+
+  /* Responsive tweaks */
+  @media (max-width:700px){
+    .hero { padding:12px }
+    .card img { height:150px }
+    .marquee p { font-size:.95rem }
+    .surprise-card { padding:18px }
+    #musicToggle { width:48px; height:48px }
+  }
+</style>
+</head>
+<body>
+  <!-- Intro screen -->
+  <div id="intro" aria-hidden="false">
+    <h2>For Aisha — With Love</h2>
+    <p>Un petit site spécial... Clique pour entrer 💖</p>
+    <button id="enterBtn" class="btn">Entrer</button>
+  </div>
+
+  <!-- Petals (generated by JS) -->
+  <div id="petals" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="title">My Aisha Jouadri</div>
+    <div class="subtitle">please take care of yourself i love you so much and i don't want anything bad to happen to you 🌸</div>
+  </header>
+
+  <main id="app" role="main">
+    <div class="hero" aria-hidden="false">
+      <div class="sun" aria-hidden="true"></div>
+      <h1 class="hero-title">My Darling Aisha 🌸</h1>
+      <p class="hero-sub" style="font-family: 'Great Vibes', cursive; font-size:1.25rem; line-height:1.6; color:#fff; text-shadow: 1px 1px 6px rgba(0,0,0,0.4);">
+I choose you. And I'll choose you, over and over and over. Without pause, without a doubt, in a heartbeat. I'll keep choosing you.
+</p>
+
+    </div>
+
+    <section class="message" aria-label="Message">
+  <div style="display:flex; justify-content:center; align-items:center; padding:20px;">
+    <img src="https://i.postimg.cc/zBbBSDgj/Whats-App-Image-2025-10-30-at-12-45-05-1.jpg" alt="Special for Aisha" style="max-width:90%; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.3);">
+  </div>
+</section>
+
+
+    <section>
+      <h3 style="text-align:center; margin:18px 0 8px;">Galerie</h3>
+      <div class="gallery" id="gallery">
+        <!-- Replace data-src with your Postimage / hosted image links -->
+        <div class="card" data-index="0"><img data-src="https://i.postimg.cc/XqX12h8v/sunsut.jpg" alt="flower 1" loading="lazy"></div>
+        <div class="card" data-index="1"><img data-src="https://i.postimg.cc/sxNj8kRd/Whats-App-Image-2025-10-30-at-12-45-05.jpg" alt="beach 1" loading="lazy"></div>
+        <div class="card" data-index="2"><img data-src="https://i.postimg.cc/6QX9DVFR/my-flowers.jpg" alt="sunset 1" loading="lazy"></div>
+        <div class="card" data-index="3"><img data-src="https://i.postimg.cc/Zn05KbTG/3631116bf16767c4b996d39a2b4fde60.jpg" alt="flower 2" loading="lazy"></div>
+      </div>
+    </section>
+
+    <div class="controls" role="region" aria-label="Contrôles">
+      <button id="surpriseBtn" class="btn">Click for a surprise 💌</button>
+      <button id="downloadBtn" class="btn secondary" title="Download gallery as zip (placeholder)">Save as ZIP</button>
+    </div>
+  </main>
+
+  <!-- Lightbox -->
+  <div id="lightbox" aria-hidden="true">
+    <div class="lb-controls">
+      <button id="prevBtn" class="lb-btn" aria-label="Previous">❮</button>
+      <button id="nextBtn" class="lb-btn" aria-label="Next">❯</button>
+    </div>
+    <img id="lb-img" src="" alt="Enlarged photo">
+    <div class="lb-bottom" id="lb-caption"></div>
+  </div>
+
+  <!-- Surprise overlay -->
+  <div id="surprise" aria-hidden="true">
+    <div class="surprise-card" role="dialog" aria-modal="true" aria-labelledby="surpriseTitle">
+      <button class="close-small" id="closeSurprise" aria-label="Close">✕</button>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <div class="surprise-heart">❤️</div>
+        <h2 id="surpriseTitle" style="margin-top:4px">For Aisha</h2>
+        <div style="display:flex; justify-content:center; align-items:center; padding:16px;">
+  <img src="https://i.postimg.cc/4djpgSGp/my.jpg" alt="For Aisha" style="max-width:90%; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,0.35);">
+</div>
+
+        <div style="margin-top:16px;">
+          <button id="surpriseCloseBtn" class="btn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Music control -->
+  <div id="musicToggle" role="button" aria-pressed="false" title="Play/Pause music">
+    <svg id="musicIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M6 4v12.55A3 3 0 0 0 8 19a3 3 0 1 0 2-2.91V7h6V4H6z" fill="#222"></path>
+    </svg>
+  </div>
+
+  <!-- Accessible audio element (hidden) -->
+  <audio id="bgAudio" preload="none" loop>
+    <source src="https://drive.google.com/uc?export=download&id=1KpV_rRlR7od_VTOlzR2gK3Qx7ZOZDmon" type="audio/mp3">
+    Votre navigateur ne supporte pas l'audio.
+</audio>
+
+
+<script>
+/* ---------- Intro flow ---------- */
+const intro = document.getElementById('intro');
+const enterBtn = document.getElementById('enterBtn');
+enterBtn.addEventListener('click', () => {
+  intro.classList.add('hidden');
+  setTimeout(()=> { intro.style.display='none' }, 650);
+  // start small animations after entering
+  startPetalsAuto();
+});
+
+/* ---------- Petals (improved) ---------- */
+const petalsContainer = document.getElementById('petals');
+let petalTimer = null;
+function random(min,max){ return Math.random()*(max-min)+min }
+
+function spawnPetal(){
+  const p = document.createElement('div');
+  p.className = 'petalX';
+  const size = random(18,48);
+  const left = random(-10,110);
+  const duration = random(6,16);
+  const delay = random(0,4);
+  const rotation = random(-90,360);
+  p.style.position='absolute';
+  p.style.left = left+'vw';
+  p.style.top = '-6vh';
+  p.style.width = size+'px';
+  p.style.height = size+'px';
+  p.style.opacity = (random(0.6,0.95)).toFixed(2);
+  p.style.transform = `rotate(${rotation}deg)`;
+  p.style.backgroundImage = `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,192,203,0.7)), linear-gradient(135deg, rgba(255,152,203,0.95), rgba(255,218,235,0.65))`;
+  p.style.borderRadius='50% 50% 50% 30%';
+  p.style.boxShadow='0 6px 18px rgba(0,0,0,0.12)';
+  p.style.pointerEvents='none';
+  p.style.transition = `transform ${duration}s linear`;
+  petalsContainer.appendChild(p);
+
+  // animate falling using requestAnimationFrame for smoother motion
+  const start = performance.now() + delay*1000;
+  const startLeft = parseFloat(p.style.left);
+  const sway = random(6,30);
+  function frame(now){
+    const t = (now - start) / (duration*1000);
+    if (t < 0) { requestAnimationFrame(frame); return; }
+    if (t >= 1) {
+      p.remove();
+      return;
+    }
+    // vertical progress
+    const y = t * 110; // vw -> vh rough
+    const xShift = Math.sin(t * Math.PI * random(1,3)) * sway;
+    p.style.top = (y-6)+'vh';
+    p.style.left = (startLeft + xShift) + 'vw';
+    p.style.transform = `rotate(${rotation + t*360}deg)`;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function startPetalsAuto(){
+  if(petalTimer) return;
+  petalTimer = setInterval(()=> spawnPetal(), 800);
+}
+
+/* ---------- Lazy load gallery images ---------- */
+const gallery = document.getElementById('gallery');
+const imgNodes = gallery.querySelectorAll('img');
+imgNodes.forEach(img=>{
+  const s = img.getAttribute('data-src');
+  img.src = s;
+});
+
+/* ---------- Lightbox ---------- */
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbCaption = document.getElementById('lb-caption');
+let currentIndex = 0;
+function openLightbox(index){
+  const card = gallery.querySelector(`[data-index="${index}"]`);
+  if(!card) return;
+  const img = card.querySelector('img');
+  lbImg.src = img.src;
+  lbImg.alt = img.alt || '';
+  lbCaption.textContent = `${index+1} / ${gallery.children.length}`;
+  lightbox.classList.add('show');
+  lightbox.setAttribute('aria-hidden','false');
+  currentIndex = index;
+}
+function closeLightbox(){
+  lightbox.classList.remove('show');
+  lightbox.setAttribute('aria-hidden','true');
+}
+gallery.addEventListener('click', (e)=>{
+  let card = e.target.closest('.card');
+  if(!card) return;
+  const idx = parseInt(card.dataset.index || 0,10);
+  openLightbox(idx);
+});
+document.getElementById('prevBtn').addEventListener('click', ()=> {
+  currentIndex = (currentIndex - 1 + gallery.children.length) % gallery.children.length;
+  openLightbox(currentIndex);
+});
+document.getElementById('nextBtn').addEventListener('click', ()=> {
+  currentIndex = (currentIndex + 1) % gallery.children.length;
+  openLightbox(currentIndex);
+});
+lightbox.addEventListener('click', (e)=>{
+  if(e.target === lightbox) closeLightbox();
+});
+document.addEventListener('keydown', (e)=>{
+  if(lightbox.classList.contains('show')){
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowRight') document.getElementById('nextBtn').click();
+    if(e.key === 'ArrowLeft') document.getElementById('prevBtn').click();
+  }
+});
+
+/* ---------- Surprise dialog with typing effect ---------- */
+const surpriseBtn = document.getElementById('surpriseBtn');
+const surprise = document.getElementById('surprise');
+const surpriseClose = document.getElementById('surpriseCloseBtn');
+const closeSmall = document.getElementById('closeSurprise');
+const typeEl = document.getElementById('typewriter');
+
+const surpriseText = "Aisha, tu es mon coucher de soleil préféré, mes fleurs au matin, et mon horizon. Je t'aime pour toujours. — Hamza";
+
+function typeWriter(text, el, speed=28){
+  el.textContent = '';
+  let i=0;
+  const t = setInterval(()=>{
+    el.textContent += text.charAt(i);
+    i++;
+    if(i >= text.length) clearInterval(t);
+  }, speed);
+}
+
+surpriseBtn.addEventListener('click', ()=> {
+  surprise.classList.add('show');
+  surprise.setAttribute('aria-hidden','false');
+  typeEl.textContent = '';
+  typeWriter(surpriseText, typeEl, 26);
+});
+surpriseClose.addEventListener('click', closeSurprise);
+closeSmall.addEventListener('click', closeSurprise);
+function closeSurprise(){
+  surprise.classList.remove('show');
+  surprise.setAttribute('aria-hidden','true');
+}
+
+/* ---------- Music control ---------- */
+const musicToggle = document.getElementById('musicToggle');
+const bgAudio = document.getElementById('bgAudio');
+let playing = false;
+musicToggle.addEventListener('click', async ()=> {
+  if(!playing){
+    try {
+      await bgAudio.play();
+      playing = true;
+      musicToggle.classList.add('playing');
+      musicToggle.setAttribute('aria-pressed','true');
+    } catch(err){
+      // Autoplay might be blocked; ask user to interact via page (we already are)
+      console.warn('audio play failed', err);
+    }
+  } else {
+    bgAudio.pause();
+    playing = false;
+    musicToggle.classList.remove('playing');
+    musicToggle.setAttribute('aria-pressed','false');
+  }
+});
+bgAudio.addEventListener('play', ()=> musicToggle.classList.add('playing'));
+bgAudio.addEventListener('pause', ()=> musicToggle.classList.remove('playing'));
+
+/* ---------- Small helper: set data-index for cards ---------- */
+(function setIndices(){
+  const cards = gallery.querySelectorAll('.card');
+  cards.forEach((c,i)=> c.dataset.index = i);
+})();
+
+/* ---------- Accessibility: keyboard focus for music toggle ---------- */
+musicToggle.tabIndex = 0;
+musicToggle.addEventListener('keyup', (e)=> { if(e.key === 'Enter' || e.key === ' ') musicToggle.click(); });
+
+/* ---------- Optional: placeholder Save as ZIP ---------- */
+document.getElementById('downloadBtn').addEventListener('click', ()=> {
+  alert('Fonction "Save as ZIP" : placeholder. Pour télécharger, récupère les images manuellement ou je peux te fournir un script.');
+});
+
+/* ---------- Initial stealth start: don't spawn petals until enter ---------- */
+/* If you want petals to start immediately, call startPetalsAuto(); here */
+</script>
+</body>
+</html>
